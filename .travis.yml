@@ -10,7 +10,6 @@ perl:
 addons:
    postgresql: "9.3"
 env:
-  - DB_TESTING: 1
 before_install:
    - "cpanm DBI"
    - "cpanm DBD::Pg"
@@ -22,4 +21,4 @@ before_install:
    - "cpanm PGObject::Util::DBAdmin"
    - "cpanm Devel::Cover::Report::Coveralls"
 script:
-   export RELEASE_TESTING=1 && perl Makefile.PL && make test && cover -test -report coveralls
+   export RELEASE_TESTING=1 && perl Makefile.PL && DB_TESTING=1 RELEASE_TESTING=1 make test && cover -test -report coveralls
