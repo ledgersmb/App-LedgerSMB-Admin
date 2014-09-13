@@ -15,10 +15,11 @@ before_install:
    - "cpanm DBI"
    - "cpanm DBD::Pg"
    - "cpanm Try::Tiny"
+   - "cpanm Test::More"
+   - "cpanm Test::Exception"
    - "cpanm PGObject::Simple::Role"
    - "cpanm PGObject::Util::DBMethod"
    - "cpanm PGObject::Util::DBAdmin"
-   - "cpanm Test::More"
    - "cpanm Devel::Cover::Report::Coveralls"
 script:
    export RELEASE_TESTING=1 && perl Makefile.PL && make test && cover -test -report coveralls
