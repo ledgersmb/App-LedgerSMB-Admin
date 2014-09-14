@@ -114,7 +114,7 @@ sub load {
     my ($self, $major_version) = @_;
     $self->run_file(
             file => App::LedgerSMB::Admin->path_for($major_version)
-                    . "/sql/Pg-Database.sql"
+                    . "/sql/Pg-database.sql"
     );
     return $self->reload;
 }
@@ -153,6 +153,7 @@ sub process_loadorder {
            $self->run_file(file => "$sql_path/$line");
         }
     }
+    return 1;
 }
 
 =head2 upgrade_to($major_version)
