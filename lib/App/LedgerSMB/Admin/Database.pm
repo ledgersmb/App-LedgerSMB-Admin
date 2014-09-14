@@ -169,7 +169,8 @@ sub upgrade_to {
                       . ".sql";
     my $versionpath = App::LedgerSMB::Admin->path_for($major_version);
     die 'No version path registered' unless $versionpath;
-    $self->run_file(file => "$versionpath/$up_filename");
+    $self->run_file(file => "$versionpath/sql/upgrade/$up_filename");
+    $self->new($self->export)->reload;
 }
 
 =head1 LICENSE AND COPYRIGHT
