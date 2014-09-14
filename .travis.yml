@@ -1,0 +1,23 @@
+language: perl
+perl:
+  - '5.10'
+  - '5.12'
+  - '5.14'
+  - '5.16'
+  - '5.18'
+  - '5.20'
+addons:
+   postgresql: "9.3"
+env:
+before_install:
+   - "cpanm DBI"
+   - "cpanm DBD::Pg"
+   - "cpanm Try::Tiny"
+   - "cpanm Test::More"
+   - "cpanm Test::Exception"
+   - "cpanm PGObject::Simple::Role"
+   - "cpanm PGObject::Util::DBMethod"
+   - "cpanm PGObject::Util::DBAdmin"
+   - "cpanm Devel::Cover::Report::Coveralls"
+script:
+   export RELEASE_TESTING=1 && perl Makefile.PL && DB_TESTING=1 RELEASE_TESTING=1 make test && cover -test -report coveralls
