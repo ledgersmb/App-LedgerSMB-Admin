@@ -15,7 +15,7 @@ sub _get_dbh {
     return $self->database->connect;
 }
 
-sub _get_funcprefix { 'setting__' };
+sub _get_prefix { 'setting__' };
 
 =head1 SYNOPSIS
 
@@ -42,7 +42,7 @@ App::LedgerSMB:Admin::Database object
 has database => (
     is => 'ro', 
    isa => sub { die 'Must be a Database Object' 
-                    unless eval { $_[0]->isa('App::LedgerSMB:Admin::Database')};
+                  unless eval { $_[0]->isa('App::LedgerSMB::Admin::Database')};
           }
 );
 
