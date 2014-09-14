@@ -15,7 +15,7 @@ sub _get_dbh {
     return $self->database->connect;
 }
 
-sub _get_prefix { 'setting__' };
+sub _get_funcprefix { 'setting__' };
 
 =head1 SYNOPSIS
 

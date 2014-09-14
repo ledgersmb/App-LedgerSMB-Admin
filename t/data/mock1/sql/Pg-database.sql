@@ -8,7 +8,7 @@ CREATE TYPE setting AS (
 CREATE OR REPLACE FUNCTION setting__get(in_setting_key text)
 returns setting language sql as
 $$
-SELECT ($1, '0.1.1');
+SELECT $1, '0.1.1'::text;
 $$;
 
 COMMIT;

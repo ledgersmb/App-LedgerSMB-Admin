@@ -64,7 +64,7 @@ has version => (is => 'lazy');
 
 sub _build_version {
     my $self = shift;
-    return App::LedgerSMB::Admin::Database::Setting->get(
+    return App::LedgerSMB::Admin::Database::Setting->new(
                                         database    => $self,
                                         setting_key => 'version')->value;
 }
