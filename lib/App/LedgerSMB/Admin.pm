@@ -34,6 +34,7 @@ sub add_paths{
     shift if $_[0] eq __PACKAGE__;
     my %version_hash = @_;
     %version_paths = (%version_paths, %version_hash);
+    return %version_paths;
 }
 
 =head2 path_for($major_version)
