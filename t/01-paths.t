@@ -1,4 +1,4 @@
-use Test::More tests => 5;
+use Test::More tests => 6;
 use App::LedgerSMB::Admin;
 
 ok(App::LedgerSMB::Admin->add_paths(
@@ -6,7 +6,8 @@ ok(App::LedgerSMB::Admin->add_paths(
       mock2 => 't/data/mock2'
   ), 'Added paths');
 
-is(keys({ App::LedgerSMB::Admin->add_paths() }), 2, 'Correct number of paths');
+ok(my %paths = App::LedgerSMB::Admin->add_paths(), 'got baths');
+is(keys(%paths ), 2, 'Correct number of paths');
 
 is(App::LedgerSMB::Admin->path_for('undef'), undef, 
     'unknown pth returns undef');
