@@ -42,7 +42,7 @@ App::LedgerSMB:Admin::Database object
 has database => (
     is => 'ro', 
    isa => sub { die 'Must be a Database Object' 
-                    unless eval { $_[0]->isa('App::LedgerSMB:Admin::Database')};
+                  unless eval { $_[0]->isa('App::LedgerSMB::Admin::Database')};
           }
 );
 

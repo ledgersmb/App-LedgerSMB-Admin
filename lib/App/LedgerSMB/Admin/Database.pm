@@ -64,7 +64,7 @@ has version => (is => 'lazy');
 
 sub _build_version {
     my $self = shift;
-    return App::LedgerSMB::Admin::Database::Setting->get(
+    return App::LedgerSMB::Admin::Database::Setting->new(
                                         database    => $self,
                                         setting_key => 'version')->value;
 }
@@ -143,7 +143,7 @@ Dies if any SQL files produce errors except from a file starting with "Fixes."
 sub process_loadorder {
     my ($self, $sql_path, $loadorder_path) = @_;
     $sql_path =~ s|/$||;
-    open(LOAD, '<', $loadorder_path);
+    open(LOAD, '<', $loadorder_path) || die "Cannot open loadorder: $!";
     for my $line (<LOAD>){
         $line =~ s/(\s*|#.*)//g;
         next unless $line;
