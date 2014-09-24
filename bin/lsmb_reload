@@ -89,7 +89,7 @@ my $db = App::LedgerSMB::Admin::Database->new(
 if ($all){
   for my $dbhame ($db->list_dbs){
      my $working_db = $db->new($db->export, dbname => $dbname);
-     do_reload($working_db);
+     do_reload($working_db) if eval { $working_db->major_version };
   }
 } elsif ($dbname){
   do_reload($db);
