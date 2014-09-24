@@ -1,4 +1,4 @@
-#!/usr/local/perl
+#!/usr/bin/perl
 
 use App::LedgerSMB::Admin;
 use App::LedgerSMB::Admin::Database;
@@ -26,15 +26,15 @@ The following options are supported:
 my ($all, $help, $host, $port, $path13, $path14, $dbname, 
     $username, $promptpasswd);
 
-GetOptions('all'             => $all,
-           'help'            => $help,
-           'host'            => $host,
-           'port'            => $port,
-           'username'        => $username, 
-           'prompt-password' => $promptpasswd,
-           'path13'          => $path13,
-           'path14'          => $path14,
-           'dbname'          => $dbname
+GetOptions('all'               => \$all,
+           'help'              => \$help,
+           'host=s'            => \$host,
+           'port=s'            => \$port,
+           'username=s'        => \$username, 
+           'prompt-password'   => \$promptpasswd,
+           'path13=s'          => \$path13,
+           'path14=s'          => \$path14,
+           'dbname=s'          => \$dbname
 );
 
 if ($help){
@@ -75,7 +75,7 @@ if ($path14) {
 
 ## set up db connection
 
-my $db = App::LedgerSMB::Database->new(
+my $db = App::LedgerSMB::Admin::Database->new(
    host     => $host,
    port     => $port,
    username => $username,
