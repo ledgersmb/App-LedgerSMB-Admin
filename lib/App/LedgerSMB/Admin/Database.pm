@@ -154,6 +154,7 @@ sub process_loadorder {
            $self->run_file(file => "$sql_path/$line");
         }
     }
+    $self->process_old_roles() if $self->major_version eq '1.3';
     return 1;
 }
 
