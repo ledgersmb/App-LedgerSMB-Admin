@@ -1,6 +1,7 @@
 package App::LedgerSMB::Admin::Database;
 use Moo;
 extends 'PGObject::Util::DBAdmin';
+use File::Temp;
 use App::LedgerSMB::Admin;
 use App::LedgerSMB::Admin::Database::Setting;
 
@@ -154,6 +155,28 @@ sub process_loadorder {
         }
     }
     return 1;
+}
+
+=head2 process_old_roles($rolefile)
+
+Processes an old-style (1.3-era) roles file and runes it on the database.
+
+=cut
+
+sub process_old_roles {
+    my ($self, $rolefile, %args) = @_;
+    $rolefile ||= 'Roles.sql';
+    my $sqlpath = App::LedgerSMB::Admin->path_for($self->major_version)
+                  . '/sql/modules';
+    my $tempdir = $args{tempdir} || $ENV{TEMP} || '/tmp';
+    my $temp = File::Temp->new(DIR => $tempdir);
+    open ROLES, '<', "$sqlpath/$rolefile";
+    for my $line (<ROLES>){
+        my $dbname = $self->dbname;
+        $line =~ s/<\?lsmb dbname ?>/$dbname/g;
+        print $temp $line;
+    }
+    eval { $self->run_file($temp->filename); };
 }
 
 =head2 upgrade_to($major_version)
