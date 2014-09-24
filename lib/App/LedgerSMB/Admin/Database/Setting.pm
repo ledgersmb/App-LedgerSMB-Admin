@@ -15,7 +15,7 @@ sub _get_dbh {
     return $self->database->connect;
 }
 
-sub _get_prefix { 'setting__' };
+sub _get_prefix { 'setting_' };
 
 =head1 SYNOPSIS
 
@@ -63,11 +63,15 @@ The value of the setting.  Is looked up lazily.
 has value => (is => 'lazy');
 
 sub _build_value {
-    my $hash = $_[0]->_get;
+    my ($hash) = $_[0]->_get;
     return $hash->{value};
 }
 
-dbmethod _get => (funcname => 'get');
+sub _get {
+    my ($self) = @_;
+    my ($hash) = $self->call_procedure(funcname => 'get', args => [$self->setting_key]);
+    return $hash;
+}
 
 =head1 LICENSE AND COPYRIGHT
 
