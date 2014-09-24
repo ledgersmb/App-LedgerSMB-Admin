@@ -58,7 +58,7 @@ my $line;
 if ($path13) {
    open(LSMB, '<', "$path13/LedgerSMB.pm") or die 'Bad LedgerSMB 1.3 path';
    ($line) = grep {$_ =~ /^\s*our\s+\$VERSION/} <LSMB>;
-   $line =~ /([0-9.]*)/;
+   $line =~ /(\d+\.\d+\.\d+)/;
    $lsmbversion->{1.3} = $1;
    App::LedgerSMB::Admin->add_paths('1.3' => $path13);
    close LSMB;
@@ -68,8 +68,9 @@ if ($path14) {
    open(LSMB, '<', "$path14/LedgerSMB.pm") or die 'Bad LedgerSMB 1.4 path';
    ($line) = grep {$_ =~ /^\s*our\s+\$VERSION/} <LSMB>;
    App::LedgerSMB::Admin->add_paths('1.4' => $path14);
-   $line =~ /([0-9.]*)/;
+   $line =~ /(\d+\.\d+\.\d+)/;
    $lsmbversion->{1.4} = $1;
+   warn $lsmbversion->{1.4};
    close LSMB;
 }
 
