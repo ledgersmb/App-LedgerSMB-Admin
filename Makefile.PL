@@ -17,8 +17,15 @@ WriteMakefile(
     },
     BUILD_REQUIRES => {
         'Test::More' => 0,
+        "Test::Exception" => 0,
     },
     PREREQ_PM => {
+        "DBI"                      => 0,
+        "DBD::Pg"                  => 0,
+        "Try::Tiny"                => 0,
+        "PGObject::Simple::Role"   => 0,
+        "PGObject::Util::DBMethod" => 0,
+        "PGObject::Util::DBAdmin"  => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'App-LedgerSMB-Admin-*' },
