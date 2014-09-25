@@ -1,7 +1,6 @@
 bin/lsmb_createdb
 bin/lsmb_reload
 Changes
-dump_2014_09.sql
 ignore.txt
 lib/App/LedgerSMB/Admin.pm
 lib/App/LedgerSMB/Admin/Database.pm
