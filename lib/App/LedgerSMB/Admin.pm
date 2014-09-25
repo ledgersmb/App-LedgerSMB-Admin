@@ -22,7 +22,70 @@ our $VERSION = '0.01';
 This module provides the basic routines for managing multiple major versions of
 LedgerSMB through a consistent toolkit.
 
-=head1 SUBROUTINES/METHODS
+It contains basically three components:
+
+=over
+
+=item command line scripts
+
+=item libraries for writing management programs
+
+=item dancer-based web application (Forthcoming)
+
+=back
+
+=head1 BUNDLED CLI PROGRAMS
+
+=head2 lsmb_reload
+
+Due to improper errors, this currently does not work properly with LedgerSMB
+1.3.  It is expected that it will following the LedgerSMB 1.3.45 release
+(forthcoming).
+
+The lsmb_reload application provides a command line tool for upgrading or
+rebuilding stored procedures and permissions of a LedgerSMB 1.3 or 1.4 database.
+
+Due to shortcomings in error handling it does not work for LedgerSMB 1.3.44 and
+below.
+
+The program supports UNIX sockets as well as TCP/IP for connecting to the
+LedgerSMB database, and all aspects of the database connection may be controlled
+through the same environment variables as any other libpq program.
+
+The following options are supported:
+
+   --all                    Reload All Databases
+   --help                   Print this message and exit
+   --host hostname          Database Host
+   --path13 /example/path   Path to LedgerSMB 1.3 installation
+   --path14 /example/path2  Path to LedgerSMB 1.4 installation
+   --port 5432              Database Poart
+   --dbname database        Reload the specified db, overridden by --all
+   --username postgres      Database Superuser to Log In As
+   --prompt-password        Prompt for Password (can use PGPASSWORD instead)
+
+
+=head2 lsmb_createdb
+
+Due to improper errors, this currently does not work properly with LedgerSMB
+1.3.  It is expected that it will following the LedgerSMB 1.3.45 release
+(forthcoming).
+
+The lsmb_reload application provides a command line tool for upgrading or
+rebuilding stored procedures and permissions of a LedgerSMB 1.3 or 1.4 database.
+
+   --help                   Print this message and exit
+   --host hostname          Database Host
+   --path /example/path     Path to LedgerSMB installation (required)
+   --chart us/chart/General Chart of Accounts path (relative to sql)
+   --gifi  ca/gifi/General  Path to GIFI
+   --port 5432              Database Poart
+   --dbname database        Create db with the following name (required)
+   --username postgres      Database Superuser to Log In As
+   --prompt-password        Prompt for Password (can use PGPASSWORD instead)
+
+
+=head1 LIBRARY SUBROUTINES/METHODS
 
 =head2 add_paths(%versionhash)
 
