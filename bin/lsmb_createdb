@@ -51,9 +51,9 @@ if ($promptpasswd){
 
 $username ||= 'postgres';
 
-open(LSMB, '<', "$path14/LedgerSMB.pm") or die 'Bad LedgerSMB path';
+open(LSMB, '<', "$path/LedgerSMB.pm") or die 'Bad LedgerSMB path';
 ($line) = grep {$_ =~ /^\s*our\s+\$VERSION/} <LSMB>;
-$line =~ /(\d+\.\d+\)/;
+$line =~ /(\d+\.\d+)/;
 my $major = $1;
 $lsmbversion->{$major} = $major;
 App::LedgerSMB::Admin->add_paths($major => $path);
@@ -74,8 +74,8 @@ my $db = App::LedgerSMB::Admin::Database->new(
 
 $db->create;
 $db->load($major);
-$chart =~ s/\.sql$//; if $chart;
-$gifi =~ s/\.sql$//; if $gifi ;
+$chart =~ s/\.sql$// if $chart;
+$gifi =~ s/\.sql$// if $gifi ;
 $db->run_file("$path/sql/$chart.sql") if $chart;
 $db->run_file("$path/sql/$gifi.sql") if $gifi;
 

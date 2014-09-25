@@ -113,11 +113,14 @@ Loads the db schema for the major version requested.
 
 sub load {
     my ($self, $major_version) = @_;
-    $self->run_file(
+    eval {
+       $self->run_file(
             file => App::LedgerSMB::Admin->path_for($major_version)
                     . "/sql/Pg-database.sql"
-    );
-    return $self->reload;
+       );
+    };
+    my $sqlpath = App::LedgerSMB::Admin->path_for($major_version) . "/sql/modules";
+    return $self->process_loadorder($sqlpath, "$sqlpath/LOADORDER");
 }
 
 =head2 reload

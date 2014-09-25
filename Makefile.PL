@@ -10,6 +10,7 @@ WriteMakefile(
     ABSTRACT_FROM    => 'lib/App/LedgerSMB/Admin.pm',
     LICENSE          => 'BSD',
     PL_FILES         => {},
+    EXE_FILES        => [ 'bin/lsmb_reload', 'bin/lsmb_createdb' ],
     MIN_PERL_VERSION => 5.010,
     CONFIGURE_REQUIRES => {
         'ExtUtils::MakeMaker' => 0,
@@ -18,8 +19,6 @@ WriteMakefile(
         'Test::More' => 0,
     },
     PREREQ_PM => {
-        #'ABC'              => 1.6,
-        #'Foo::Bar::Module' => 5.0401,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'App-LedgerSMB-Admin-*' },
