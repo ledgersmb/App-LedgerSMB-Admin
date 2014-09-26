@@ -1,5 +1,7 @@
 package App::LedgerSMB::Admin::Database::Routings;
 use Dancer ':syntax';
+use Dancer::Serializer;
+use Dancer::Plugin::Ajax;
 use Template;
 
 =head1 NAME
@@ -8,33 +10,62 @@ App::LedgerSMB::Admin::Database::Routings - Dancer App for LSMB DB Admin
 
 =cut
 
-# Databases
+=head1 URL LAYOUT
 
-get  '/lsmbadmin/1.0/:host/:port/list.*' => \&_list_dbs;
-get  '/lsmbadmin/1.0/:host/:port/new.html' => sub { template 'new_db' => {} };
-post '/lsmbadmin/1.0/:host/:port/new.*' => \&_createdb;
-put  '/lsmbadmin/1.0/:host/:port/new.*' => \&_createdb;
-get  '/lsmbadmin/1.0/:host/:port/globals/*.*' => \&_backup_globals;
-post '/lsmbadmin/1.0/:host/:port/globals/*.*' => \&_restore_globals;
-put  '/lsmbadmin/1.0/:host/:port/globals/*.*' => \&_restore_globals;
-get  '/lsmbadmin/1.0/:host/:port/db/:dbname/' => sub {
-                                                  template 'db_info' =>
-                                                            db_info();
-                                              };
-post '/lsmbadmin/1.0/:host/:port/db/:dbname/' => \&reload_db;
-put  '/lsmbadmin/1.0/:host/:port/db/:dbname/' => \&reload_db;
-put  '/lsmbadmin/1.0/:host/:port/db/:dbname/*.sql' => \&run_file;
-post '/lsmbadmin/1.0/:host/:port/db/:dbname/*.sql' => \&run_file;
-get  '/lsmbadmin/1.0/:host/:port/db/:dbname/backup/*.*' => \&backup_db;
-put  '/lsmbadmin/1.0/:host/:port/db/:dbname/backup/*.*' => \&restore_backup;
-post '/lsmbadmin/1.0/:host/:port/db/:dbname/backup/*.*' => \&restore_backup;
+All urls occur in the /lsmbadmin/1.0/ path from the document root.
 
-# subs
+=cut
 
-sub list_dbs {
+prefix '/lsmbadmin/1.0'
+
+=head2 Per Server URLs
+
+=cut
+
+get  '/:host/:port/list.html'   => sub { template 'dblist'  => _list_dbs();
+ajax  '/:host/:port/list/'      => sub { to_json(_lsmb_dbs()) };
+get  '/:host/:port/new.html'    => sub { template 'new_db'  => {} };
+post '/:host/:port/new/'        => sub { template 'db_info' => _createdb() };
+ajax  '/:host/:port/new/'       => sub { to_json(createdb()) };
+get  '/:host/:port/globals/'    => sub { _backup_globals() };
+post '/:host/:port/globals/'    => sub { _restore_globals() };
+put  '/:host/:port/globals/'    => sub { _restore_globals() };
+
+=head2 Per Database URLs
+
+=cut
+
+get  '/:host/:port/db/:dbname/' => sub { template 'db_info' => _db_info(); };
+post '/:host/:port/db/:dbname/' => \&_reload_db;
+put  '/:host/:port/db/:dbname/' => \&_reload_db;
+put  '/:host/:port/db/:dbname/*.sql' => \&_run_file;
+post '/:host/:port/db/:dbname/*.sql' => \&_run_file;
+get  '/:host/:port/db/:dbname/backup/*.*' => \&_backup_db;
+put  '/:host/:port/db/:dbname/backup/*.*' => \&_restore_backup;
+post '/:host/:port/db/:dbname/backup/*.*' => \&_restore_backup;
+
+
+sub _list_dbs {
+    my $db = authenticate(
+              host   => param('host'), 
+              port   => param('port'),
+              dbname => 'postgres'
+    );
+    return $db->list_dbs;
 }
 
 sub createdb {
+    my $db = authenticate(
+              host   => param('host'), 
+              port   => param('port'),
+              dbname => 'postgres'
+    );
+    my $newdb = App::LedgerSMB::Admin::Database->new(
+           $db->export, dbname => param('dbname')
+    );
+    $newdb->create;
+    $newdb->load;
+    return $newdb->list_dbs;
 }
 
 sub backup_globals {
