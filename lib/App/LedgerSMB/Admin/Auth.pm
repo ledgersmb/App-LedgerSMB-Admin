@@ -52,7 +52,7 @@ sub _fail_auth {
         content => $authmsg,
         headers => [
             'Content-Type' => 'text/plain',
-            'Content-Length' => length($content),
+            'Content-Length' => length($authmsg),
             'WWW-Authenticate' => 'Basic realm="LedgerSMB Admin"',
         ]
     ));
