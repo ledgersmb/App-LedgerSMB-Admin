@@ -12,6 +12,7 @@ env:
 before_install:
    - "cpanm DBI"
    - "cpanm DBD::Pg"
+   - "cpanm Dancer"
    - "cpanm Try::Tiny"
    - "cpanm Test::More"
    - "cpanm Test::Exception"
