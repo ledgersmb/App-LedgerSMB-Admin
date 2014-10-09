@@ -22,7 +22,7 @@ prefix '/lsmbadmin/1.0'
 
 =cut
 
-get  '/:host/:port/list.html'   => sub { template 'dblist'  => _list_dbs();
+get  '/:host/:port/list.html'   => sub { template 'dblist'  => _list_dbs() };
 ajax  '/:host/:port/list/'      => sub { to_json(_lsmb_dbs()) };
 get  '/:host/:port/new.html'    => sub { template 'new_db'  => {} };
 post '/:host/:port/new/'        => sub { template 'db_info' => _createdb() };
