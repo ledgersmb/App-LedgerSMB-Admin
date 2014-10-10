@@ -33,11 +33,11 @@ Upgrading to 1.4 from 1.3, after updating 1.3 instance to latest:
 
 =head1 VERSION
 
-0.02
+0.03
 
 =cut
 
-our $VERSION=0.02;
+our $VERSION=0.03;
 
 =head1 PROPERTIES INHERITED FROM PGObject::Util::DBAdmin
 
