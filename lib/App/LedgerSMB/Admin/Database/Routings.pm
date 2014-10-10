@@ -20,16 +20,41 @@ prefix '/lsmbadmin/1.0';
 
 =head2 Per Server URLs
 
+The server urls are then parameterized with host and port.
+
+For each server the following resources are present:
+
+=over
+
+=item dbs - list databases (get only)
+
+=item new - new database
+
+=item globals - backup of server globals (put to restore)
+
+=back
+
+get retrieves information, post updates the information.
+
+The complete urls then become, for a server at localhost and a port of 5432, 
+off a base of:
+
+ /lsmbadmin/1.0/localhost/5432/
+
+So the database list would be found at
+
+ /lsmbadmin/1.0/localhost/5432/dbs
+
 =cut
 
-get  '/:host/:port/list.html'   => sub { template 'dblist'  => _list_dbs() };
-ajax  '/:host/:port/list/'      => sub { to_json(_lsmb_dbs()) };
-get  '/:host/:port/new.html'    => sub { template 'new_db'  => {} };
-post '/:host/:port/new/'        => sub { template 'db_info' => _createdb() };
-ajax  '/:host/:port/new/'       => sub { to_json(createdb()) };
-get  '/:host/:port/globals/'    => sub { _backup_globals() };
-post '/:host/:port/globals/'    => sub { _restore_globals() };
-put  '/:host/:port/globals/'    => sub { _restore_globals() };
+get  '/:host/:port/dbs'     => sub { template 'dblist'  => _list_dbs() };
+ajax  '/:host/:port/dbs'    => sub { to_json(_lsmb_dbs()) };
+get  '/:host/:port/new'     => sub { template 'new_db'  => {} };
+post '/:host/:port/new'     => sub { template 'db_info' => _createdb() };
+ajax  '/:host/:port/new'    => sub { to_json(createdb()) };
+get  '/:host/:port/globals' => sub { _backup_globals() };
+put  '/:host/:port/globals' => sub { template 'restored' => _restore_globals()};
+ajax '/:host/:port/globals' => sub { to_json(_restore_globals()) };
 
 =head2 Per Database URLs
 
