@@ -16,7 +16,7 @@ All urls occur in the /lsmbadmin/1.0/ path from the document root.
 
 =cut
 
-prefix '/lsmbadmin/1.0'
+prefix '/lsmbadmin/1.0';
 
 =head2 Per Server URLs
 
