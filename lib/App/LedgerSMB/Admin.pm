@@ -10,11 +10,11 @@ App::LedgerSMB::Admin - Easily Manage LedgerSMB Installations
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 
 =head1 SYNOPSIS
@@ -22,15 +22,13 @@ our $VERSION = '0.02';
 This module provides the basic routines for managing multiple major versions of
 LedgerSMB through a consistent toolkit.
 
-It contains basically three components:
+It contains basically two components:
 
 =over
 
 =item command line scripts
 
 =item libraries for writing management programs
-
-=item dancer-based web application (Forthcoming)
 
 =back
 
@@ -84,8 +82,25 @@ rebuilding stored procedures and permissions of a LedgerSMB 1.3 or 1.4 database.
    --username postgres      Database Superuser to Log In As
    --prompt-password        Prompt for Password (can use PGPASSWORD instead)
 
+=head1 Bundled Libraries
 
-=head1 LIBRARY SUBROUTINES/METHODS
+=head2 App::LedgerSMB::Admin
+
+Provides base version tracking and management routines
+
+=head2 App::LedgerSMB::Admin::Database
+
+Routines to reload, create, update, backup, and restore databases
+
+=head2 App::LedgerSMB::Admin::Database::Setting
+
+Look up settings in a LedgerSMB database
+
+=head2 App::LedgerSMB::Admin::User
+
+Undeveloped, but will include basic user management routines.
+
+=head1 SUBROUTINES/METHODS of This Library
 
 =head2 add_paths(%versionhash)
 
