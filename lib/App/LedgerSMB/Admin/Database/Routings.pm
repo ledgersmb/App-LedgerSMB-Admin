@@ -79,7 +79,7 @@ sub _list_dbs {
     return $db->list_dbs;
 }
 
-sub createdb {
+sub _createdb {
     my $db = authenticate(
               host   => param('host'), 
               port   => param('port'),
@@ -93,22 +93,22 @@ sub createdb {
     return $newdb->list_dbs;
 }
 
-sub backup_globals {
+sub _backup_globals {
 }
 
-sub restore_globals {
+sub _restore_globals {
 }
 
-sub reload_db {
+sub _reload_db {
 }
 
-sub backup_db {
+sub _backup_db {
 }
 
-sub restore_db {
+sub _restore_db {
 }
 
-sub run_file {
+sub _run_file {
 }
 
 1;
