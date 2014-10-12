@@ -36,8 +36,8 @@ WriteMakefile(
         resources => {
            repository => {
              type => 'git',
-             url  => 'https://github.com/dwimperl/Task-DWIM.git',
-             web  => 'https://github.com/dwimperl/Task-DWIM',
+             url  => 'https://github.com/ledgersmb/App-LedgerSMB-Admin.git',
+             web  => 'https://github.com/ledgersmb/App-LedgerSMB-Admin',
            },
        },
     },
