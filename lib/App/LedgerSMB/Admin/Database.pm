@@ -2,6 +2,8 @@ package App::LedgerSMB::Admin::Database;
 use Moo;
 extends 'PGObject::Util::DBAdmin';
 use File::Temp;
+use Cwd;
+use PGObject::Util::DBChange;
 use App::LedgerSMB::Admin;
 use App::LedgerSMB::Admin::Database::Setting;
 
@@ -83,7 +85,7 @@ has major_version => (is => 'lazy');
 sub _build_major_version {
     my $self = shift;
     my $version = $self->version;
-    $version =~ s/\.\d*$//;
+    $version =~ s/\.\d*(?:-dev)?$//;
     return $version;
 }
 
@@ -180,9 +182,12 @@ Reloads all modules in a LedgerSMB instance.
 
 sub reload {
     my ($self) = @_;
-    my $sqlpath = App::LedgerSMB::Admin->path_for($self->major_version)
-                  . '/sql/modules';
-    return $self->process_loadorder($sqlpath, "$sqlpath/LOADORDER");
+    my $path = Cwd::getcwd();
+    my $sqlpath = App::LedgerSMB::Admin->path_for($self->major_version);
+    chdir $sqlpath;
+    my $rc =  $self->process_loadorder('sql/modules', "sql/modules/LOADORDER");
+    chdir $path;
+    return $rc;
 }
 
 =head2 process_loadorder($sql_path, $loadorder_path);
@@ -196,10 +201,7 @@ Dies if any SQL files produce errors except from a file starting with "Fixes."
 sub process_loadorder {
     my ($self, $sql_path, $loadorder_path) = @_;
     $sql_path =~ s|/$||;
-    open(LOAD, '<', $loadorder_path) || die "Cannot open loadorder: $!";
-    for my $line (<LOAD>){
-        $line =~ s/(\s*|#.*)//g;
-        next unless $line;
+    for my $line (_loadorder_entries($loadorder_path)){
         if ($line =~ /^Fixes/){
            eval { $self->run_file(file => "$sql_path/$line") };
         } else {
@@ -210,9 +212,40 @@ sub process_loadorder {
     return 1;
 }
 
+sub _loadorder_entries {
+    my $loadorderpath = shift;
+    open(LOAD, '<', $loadorderpath) || die "Cannot open loadorder: $!";
+    return grep {$_} map { my $l = $_; $l =~ s/(\s*|#.*)//g; $l} <LOAD>;
+}
+
+=head2 process_changes($loadorderfile)
+applies db changes (post-1.4) to the db as specified in the provided LOADORDER
+
+=cut
+
+sub process_changes {
+    my ($self) = @_;
+    my $loadorderpath = App::LedgerSMB::Admin->path_for($self->major_version) .
+                        "/sql/changes";
+    my $dbh = $self->connect({ AutoCommit => 0});
+    my $sql_path = $loadorderpath;
+    PGObject::Util::DBChange->init($dbh);
+    for my $line (_loadorder_entries($loadorderpath . '/LOADORDER')){
+        $line =~ s/^(!)?//;
+        my $failure_ok = $1;
+        my $dbchange = PGObject::Util::DBChange->new(
+                     path => "$sql_path/$line",
+                     no_transactions => 1
+        ); 
+        next if $dbchange->is_applied($dbh);
+        $dbchange->apply($dbh) || $failure_ok 
+           || die "Change $line failed: " . $dbh->errstr;
+    }
+}
+
 =head2 process_old_roles($rolefile)
 
-Processes an old-style (1.3-era) roles file and runes it on the database.
+Processes an old-style (1.3-era) roles file and runs it on the database.
 
 =cut
 

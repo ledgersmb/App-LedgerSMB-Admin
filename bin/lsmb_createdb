@@ -51,7 +51,8 @@ if ($promptpasswd){
 
 $username ||= 'postgres';
 
-open(LSMB, '<', "$path/LedgerSMB.pm") or die 'Bad LedgerSMB path';
+open(LSMB, '<', "$path/LedgerSMB.pm") or 
+open(LSMB, '<', "$path/lib/LedgerSMB.pm") or die 'Bad LedgerSMB path';
 ($line) = grep {$_ =~ /^\s*our\s+\$VERSION/} <LSMB>;
 $line =~ /(\d+\.\d+)/;
 my $major = $1;
