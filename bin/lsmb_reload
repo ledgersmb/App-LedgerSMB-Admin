@@ -115,6 +115,7 @@ sub do_reload {
     my $ver = $db->major_version;
     die 'Unsupported version: ' . $ver unless $lsmbversion->{$ver};
     $db->reload;
+    $db->process_changes if $ver > 1.4;
     my $dbh = $db->connect({AutoCommit => 1});
     $dbh->prepare(
       "UPDATE defaults SET value = ? WHERE setting_key = 'version'"

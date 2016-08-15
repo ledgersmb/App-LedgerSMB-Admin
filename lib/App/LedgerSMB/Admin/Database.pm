@@ -3,6 +3,7 @@ use Moo;
 extends 'PGObject::Util::DBAdmin';
 use File::Temp;
 use Cwd;
+use PGObject::Util::DBChange;
 use App::LedgerSMB::Admin;
 use App::LedgerSMB::Admin::Database::Setting;
 
@@ -223,20 +224,22 @@ applies db changes (post-1.4) to the db as specified in the provided LOADORDER
 =cut
 
 sub process_changes {
-    my ($self, $loadorderpath) = @_;
-    my $dbh = $self->connect;
+    my ($self) = @_;
+    my $loadorderpath = App::LedgerSMB::Admin->path_for($self->major_version) .
+                        "/sql/changes";
+    my $dbh = $self->connect({ AutoCommit => 0});
     my $sql_path = $loadorderpath;
-    $sql_path =~ s#/?LOADORDER$##;
-    PGObject::Util::DBChange->init_if_needed($dbh);
-    for my $line (_loadorder_entries($loadorderpath)){
-        my $line =~ s/^(!)?//;
+    PGObject::Util::DBChange->init($dbh);
+    for my $line (_loadorder_entries($loadorderpath . '/LOADORDER')){
+        $line =~ s/^(!)?//;
         my $failure_ok = $1;
         my $dbchange = PGObject::Util::DBChange->new(
                      path => "$sql_path/$line",
                      no_transactions => 1
         ); 
+        next if $dbchange->is_applied($dbh);
         $dbchange->apply($dbh) || $failure_ok 
-           || die "Change $line failed: " . $dbh->ERRSTR;
+           || die "Change $line failed: " . $dbh->errstr;
     }
 }
 
