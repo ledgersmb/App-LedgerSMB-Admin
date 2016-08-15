@@ -2,6 +2,7 @@ package App::LedgerSMB::Admin::Database;
 use Moo;
 extends 'PGObject::Util::DBAdmin';
 use File::Temp;
+use Cwd;
 use App::LedgerSMB::Admin;
 use App::LedgerSMB::Admin::Database::Setting;
 
@@ -180,9 +181,12 @@ Reloads all modules in a LedgerSMB instance.
 
 sub reload {
     my ($self) = @_;
-    my $sqlpath = App::LedgerSMB::Admin->path_for($self->major_version)
-                  . '/sql/modules';
-    return $self->process_loadorder($sqlpath, "$sqlpath/LOADORDER");
+    my $path = Cwd::getcwd();
+    my $sqlpath = App::LedgerSMB::Admin->path_for($self->major_version);
+    chdir $sqlpath;
+    my $rc =  $self->process_loadorder('sql/modules', "sql/modules/LOADORDER");
+    chdir $path;
+    return $rc;
 }
 
 =head2 process_loadorder($sql_path, $loadorder_path);
