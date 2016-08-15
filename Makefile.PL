@@ -28,7 +28,7 @@ WriteMakefile(
         "PGObject::Simple::Role"   => 0,
         "PGObject::Util::DBMethod" => 0,
         "PGObject::Util::DBAdmin"  => 0,
-        "PGObject::Util::DBChange"  => 0,
+        "PGObject::Util::DBChange"  => 0.04,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'App-LedgerSMB-Admin-*' },
