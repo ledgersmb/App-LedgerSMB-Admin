@@ -196,10 +196,7 @@ Dies if any SQL files produce errors except from a file starting with "Fixes."
 sub process_loadorder {
     my ($self, $sql_path, $loadorder_path) = @_;
     $sql_path =~ s|/$||;
-    open(LOAD, '<', $loadorder_path) || die "Cannot open loadorder: $!";
-    for my $line (<LOAD>){
-        $line =~ s/(\s*|#.*)//g;
-        next unless $line;
+    for my $line (_loadorder_entries($loadorder_path)){
         if ($line =~ /^Fixes/){
            eval { $self->run_file(file => "$sql_path/$line") };
         } else {
@@ -210,9 +207,38 @@ sub process_loadorder {
     return 1;
 }
 
+sub _loadorder_entries {
+    my $loadorderpath = shift;
+    open(LOAD, '<', $loadorderpath) || die "Cannot open loadorder: $!";
+    return grep {$_} map { my $l = $_; $l =~ s/(\s*|#.*)//g; $l} <LOAD>;
+}
+
+=head2 process_changes($loadorderfile)
+applies db changes (post-1.4) to the db as specified in the provided LOADORDER
+
+=cut
+
+sub process_changes {
+    my ($self, $loadorderpath) = @_;
+    my $dbh = $self->connect;
+    my $sql_path = $loadorderpath;
+    $sql_path =~ s#/?LOADORDER$##;
+    PGObject::Util::DBChange->init_if_needed($dbh);
+    for my $line (_loadorder_entries($loadorderpath)){
+        my $line =~ s/^(!)?//;
+        my $failure_ok = $1;
+        my $dbchange = PGObject::Util::DBChange->new(
+                     path => "$sql_path/$line",
+                     no_transactions => 1
+        ); 
+        $dbchange->apply($dbh) || $failure_ok 
+           || die "Change $line failed: " . $dbh->ERRSTR;
+    }
+}
+
 =head2 process_old_roles($rolefile)
 
-Processes an old-style (1.3-era) roles file and runes it on the database.
+Processes an old-style (1.3-era) roles file and runs it on the database.
 
 =cut
 

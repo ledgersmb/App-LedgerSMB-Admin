@@ -17,6 +17,7 @@ The following options are supported:
    --host hostname          Database Host
    --path13 /example/path   Path to LedgerSMB 1.3 installation
    --path14 /example/path2  Path to LedgerSMB 1.4 installation
+   --path15 /example/path2  Path to LedgerSMB 1.5 installation
    --port 5432              Database Poart
    --dbname database        Reload the specified db, overridden by --all
    --username postgres      Database Superuser to Log In As
@@ -34,6 +35,7 @@ GetOptions('all'               => \$all,
            'prompt-password'   => \$promptpasswd,
            'path13=s'          => \$path13,
            'path14=s'          => \$path14,
+           'path14=s'          => \$path15,
            'dbname=s'          => \$dbname
 );
 
@@ -74,6 +76,15 @@ if ($path14) {
    close LSMB;
 }
 
+if ($path15) {
+   open(LSMB, '<', "$path15/lib/LedgerSMB.pm") or die 'Bad LedgerSMB 1.5 path';
+   ($line) = grep {$_ =~ /^\s*our\s+\$VERSION/} <LSMB>;
+   App::LedgerSMB::Admin->add_paths('1.5' => $path15);
+   $line =~ /(\d+\.\d+\.\d+)/;
+   $lsmbversion->{1.5} = $1;
+   warn $lsmbversion->{1.4};
+   close LSMB;
+}
 ## set up db connection
 
 my $db = App::LedgerSMB::Admin::Database->new(
