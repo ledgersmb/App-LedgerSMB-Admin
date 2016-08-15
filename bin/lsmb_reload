@@ -35,7 +35,7 @@ GetOptions('all'               => \$all,
            'prompt-password'   => \$promptpasswd,
            'path13=s'          => \$path13,
            'path14=s'          => \$path14,
-           'path14=s'          => \$path15,
+           'path15=s'          => \$path15,
            'dbname=s'          => \$dbname
 );
 
@@ -82,7 +82,7 @@ if ($path15) {
    App::LedgerSMB::Admin->add_paths('1.5' => $path15);
    $line =~ /(\d+\.\d+\.\d+)/;
    $lsmbversion->{1.5} = $1;
-   warn $lsmbversion->{1.4};
+   warn $lsmbversion->{1.5};
    close LSMB;
 }
 ## set up db connection

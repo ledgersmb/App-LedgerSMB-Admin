@@ -83,7 +83,7 @@ has major_version => (is => 'lazy');
 sub _build_major_version {
     my $self = shift;
     my $version = $self->version;
-    $version =~ s/\.\d*$//;
+    $version =~ s/\.\d*(?:-dev)?$//;
     return $version;
 }
 
