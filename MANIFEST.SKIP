@@ -38,7 +38,8 @@
 ^work
 ^tmp
 \bTAGS$
-^MYMETA.yml$
+^MYMETA\.
+^ignore\.txt$
 
 \bSu-[\d\.\_]+
 

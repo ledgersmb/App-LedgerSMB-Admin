@@ -1,5 +1,8 @@
 Revision history for App-LedgerSMB-Admin
 
+0.07    2017-05-10
+        Remove MYMETA.json & ignore.txt from distribution archive
+
 0.06    2017-05-10
         Remove unused dependencies
 
