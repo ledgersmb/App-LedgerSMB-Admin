@@ -20,6 +20,7 @@ WriteMakefile(
         "Test::Exception" => 0,
     },
     PREREQ_PM => {
+        "PGObject::Simple::Role"   => 0,
         "PGObject::Util::DBMethod" => 0,
         "PGObject::Util::DBAdmin"  => 0,
         "PGObject::Util::DBChange"  => 0.04,

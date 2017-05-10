@@ -12,7 +12,7 @@ env:
   - DB_TESTING=1 RELEASE_TESTING=1
 addons:
    postgresql: "9.3"
-env:
+
 before_install:
    - eval $(curl https://travis-perl.github.io/init) --auto
 
