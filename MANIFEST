@@ -22,4 +22,3 @@ t/data/mock2/sql/upgrade/lsmb0.1-0.2.sql
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
-url_layout
